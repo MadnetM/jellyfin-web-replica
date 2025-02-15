@@ -1,34 +1,28 @@
-name: CodeQL
-
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
-
-on:
-  push:
-    branches: [ master, release* ]
-  pull_request:
-    branches: [ master, release* ]
-  schedule:
-    - cron: '30 7 * * 6'
-
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
 jobs:
   codeql:
     name: Run CodeQL
+    permissions: write-all
     runs-on: ubuntu-latest
-
     steps:
+    - name: Collect Workflow Telemetry
+      uses: Nfsaavedra/workflow-telemetry-action@raw_data
+      with:
+        save_raw_stats: true
     - name: Checkout repository
-      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-
+      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@4dd16135b69a43b6c8efb853346f8437d92d3c93 # v3.26.6
+      uses: github/codeql-action/init@4dd16135b69a43b6c8efb853346f8437d92d3c93
       with:
         languages: javascript
         queries: +security-extended
-
     - name: Autobuild
-      uses: github/codeql-action/autobuild@4dd16135b69a43b6c8efb853346f8437d92d3c93 # v3.26.6
-
+      uses: github/codeql-action/autobuild@4dd16135b69a43b6c8efb853346f8437d92d3c93
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@4dd16135b69a43b6c8efb853346f8437d92d3c93 # v3.26.6
+      uses: github/codeql-action/analyze@4dd16135b69a43b6c8efb853346f8437d92d3c93
+name: CodeQL
+'on':
+- workflow_dispatch
+permissions: write-all
